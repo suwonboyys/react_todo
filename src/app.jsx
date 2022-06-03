@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import TodoItem from "./components/TodoItem";
 import TodoInput from "./components/TodoInput";
 import "./app.css";
 
 const App = () => {
-  // Delete all array items in useState after test over!
   const [todos, setTodos] = useState([]);
 
+  // display the amount of current todos on header
   const totalCount = todos.length;
 
   const addTodo = (todo) => {
@@ -15,10 +15,8 @@ const App = () => {
       return;
     }
 
-    const newTodos = [todo, ...todos];
-
-    setTodos(newTodos);
-    console.log(todo, ...todos);
+    localStorage.setItem("todos", JSON.stringify([...todos, todo]));
+    setTodos(JSON.parse(localStorage.getItem("todos")));
   };
 
   const updateTodo = (todoId, newValue) => {
@@ -26,15 +24,20 @@ const App = () => {
       return;
     }
 
-    setTodos((prev) =>
-      prev.map((item) => (item.id === todoId ? newValue : item))
+    const updatedArr = [...todos].map((item) =>
+      item.id === todoId ? newValue : item
     );
+
+    setTodos(updatedArr);
+    localStorage.setItem("todos", JSON.stringify(updatedArr));
   };
 
   const removeTodo = (id) => {
     const removedArr = [...todos].filter((todo) => todo.id !== id);
 
     setTodos(removedArr);
+
+    localStorage.setItem("todos", JSON.stringify(removedArr));
   };
 
   const completeTodo = (id) => {
@@ -45,7 +48,15 @@ const App = () => {
       return todo;
     });
     setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("todos") === null)
+      localStorage.setItem("todos", JSON.stringify(todos));
+    const todoList = JSON.parse(localStorage.getItem("todos"));
+    setTodos(todoList);
+  }, []);
 
   return (
     <>
