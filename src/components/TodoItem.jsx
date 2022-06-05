@@ -1,20 +1,21 @@
-import React, { useState } from "react";
-import TodoInput from "./TodoInput";
-import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
-import { MdEdit } from "react-icons/md";
-import { MdDeleteForever } from "react-icons/md";
+import React, { useState } from 'react';
+import TodoInput from './TodoInput';
+import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
+import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md';
+import { MdEdit } from 'react-icons/md';
+import { MdDeleteForever } from 'react-icons/md';
 
 const TodoItem = (props) => {
   const [edit, setEdit] = useState({
     id: null,
-    value: "",
+    value: '',
   });
 
   const submitUpdate = (value) => {
     props.updateTodo(edit.id, value);
     setEdit({
       id: null,
-      value: "",
+      value: '',
     });
   };
 
@@ -24,14 +25,20 @@ const TodoItem = (props) => {
 
   return props.todos.map((todo, index) => (
     <li
-      className={`content ${todo.isComplete ? "itemRow complete" : "itemRow"}`}
       key={index}
+      className={`content ${todo.isComplete ? 'itemRow complete' : 'itemRow'}`}
     >
-      <div
-        key={todo.id}
-        onClick={() => props.completeTodo(todo.id)}
-        className="text"
-      >
+      <div key={todo.id} className="text">
+        {todo.isComplete ? (
+          <MdCheckBox onClick={() => props.completeTodo(todo.id)} />
+        ) : (
+          <MdCheckBoxOutlineBlank onClick={() => props.completeTodo(todo.id)} />
+        )}
+        {todo.isMarked ? (
+          <AiFillStar onClick={() => props.starTodo(todo.id)} />
+        ) : (
+          <AiOutlineStar onClick={() => props.starTodo(todo.id)} />
+        )}
         {todo.text}
       </div>
       <span className="icons">
