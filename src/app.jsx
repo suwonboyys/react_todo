@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import Navbar from "./components/Navbar";
-import TodoItem from "./components/TodoItem";
-import TodoInput from "./components/TodoInput";
-import "./app.css";
+import React, { useEffect, useState } from 'react';
+import Navbar from './components/Navbar';
+import TodoItem from './components/TodoItem';
+import TodoInput from './components/TodoInput';
+import './app.css';
 
 const App = () => {
   const [todos, setTodos] = useState([]);
@@ -15,8 +15,8 @@ const App = () => {
       return;
     }
 
-    localStorage.setItem("todos", JSON.stringify([...todos, todo]));
-    setTodos(JSON.parse(localStorage.getItem("todos")));
+    localStorage.setItem('todos', JSON.stringify([...todos, todo]));
+    setTodos(JSON.parse(localStorage.getItem('todos')));
   };
 
   const updateTodo = (todoId, newValue) => {
@@ -29,7 +29,7 @@ const App = () => {
     );
 
     setTodos(updatedArr);
-    localStorage.setItem("todos", JSON.stringify(updatedArr));
+    localStorage.setItem('todos', JSON.stringify(updatedArr));
   };
 
   const removeTodo = (id) => {
@@ -37,7 +37,7 @@ const App = () => {
 
     setTodos(removedArr);
 
-    localStorage.setItem("todos", JSON.stringify(removedArr));
+    localStorage.setItem('todos', JSON.stringify(removedArr));
   };
 
   const completeTodo = (id) => {
@@ -48,13 +48,24 @@ const App = () => {
       return todo;
     });
     setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+  };
+
+  const starTodo = (id) => {
+    let markedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        todo.isMarked = !todo.isMarked;
+      }
+      return todo;
+    });
+    setTodos(markedTodos);
+    localStorage.setItem('todos', JSON.stringify(markedTodos));
   };
 
   useEffect(() => {
-    if (localStorage.getItem("todos") === null)
-      localStorage.setItem("todos", JSON.stringify(todos));
-    const todoList = JSON.parse(localStorage.getItem("todos"));
+    if (localStorage.getItem('todos') === null)
+      localStorage.setItem('todos', JSON.stringify(todos));
+    const todoList = JSON.parse(localStorage.getItem('todos'));
     setTodos(todoList);
   }, []);
 
@@ -65,6 +76,7 @@ const App = () => {
       <ul className="items">
         <TodoItem
           todos={todos}
+          starTodo={starTodo}
           completeTodo={completeTodo}
           removeTodo={removeTodo}
           updateTodo={updateTodo}
