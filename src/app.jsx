@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { startTransition, useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import TodoItem from './components/TodoItem';
 import TodoInput from './components/TodoInput';
+import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
+import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md';
+import { MdEdit } from 'react-icons/md';
+import { MdDeleteForever } from 'react-icons/md';
 import './app.css';
 
-const App = () => {
+const App = (props) => {
   const [todos, setTodos] = useState([]);
+  const [topTodos, setTopTodos] = useState([]);
 
-  // display the amount of current todos on header
+  // display the amount of current todos and stared todos on header
   const totalCount = todos.length;
+  const starCount = topTodos.length;
 
   const addTodo = (todo) => {
     if (!todo.text || /^\s*$/.test(todo.text)) {
@@ -38,6 +44,14 @@ const App = () => {
     setTodos(removedArr);
 
     localStorage.setItem('todos', JSON.stringify(removedArr));
+
+    const removedTopList = [...todos].filter(
+      (todo) => todo.id !== id && todo.isMarked === true
+    );
+
+    setTopTodos(removedTopList);
+
+    localStorage.setItem('stars', JSON.stringify(removedTopList));
   };
 
   const completeTodo = (id) => {
@@ -58,22 +72,81 @@ const App = () => {
       }
       return todo;
     });
+
     setTodos(markedTodos);
     localStorage.setItem('todos', JSON.stringify(markedTodos));
+
+    const topTodos = [...todos].filter((todo) => todo.isMarked === true);
+
+    setTopTodos(topTodos);
+    localStorage.setItem('stars', JSON.stringify(topTodos));
   };
 
   useEffect(() => {
     if (localStorage.getItem('todos') === null)
       localStorage.setItem('todos', JSON.stringify(todos));
+
     const todoList = JSON.parse(localStorage.getItem('todos'));
     setTodos(todoList);
   }, []);
 
+  useEffect(() => {
+    if (localStorage.getItem('stars') === null)
+      localStorage.setItem('stars', JSON.stringify(topTodos));
+
+    const topList = JSON.parse(localStorage.getItem('stars'));
+    setTopTodos(topList);
+  }, []);
+
   return (
     <>
-      <Navbar totalCount={totalCount} />
+      <Navbar totalCount={totalCount} starCount={starCount} />
       <TodoInput onSubmit={addTodo} />
       <ul className="items">
+        {todos.map((todo, index) => {
+          if (todo.isMarked) {
+            const storedItems = JSON.parse(localStorage.getItem('stars'));
+            return (
+              <li
+                key={index}
+                className={`content ${
+                  storedItems.length === 0
+                    ? 'unprimary itemRow'
+                    : 'primary itemRow'
+                }`}
+              >
+                <div key={todo.id} className="text">
+                  {todo.isComplete ? (
+                    <MdCheckBox onClick={() => completeTodo(todo.id)} />
+                  ) : (
+                    <MdCheckBoxOutlineBlank
+                      onClick={() => completeTodo(todo.id)}
+                    />
+                  )}
+                  {todo.isMarked ? (
+                    <AiFillStar onClick={() => starTodo(todo.id)} />
+                  ) : (
+                    <AiOutlineStar onClick={() => starTodo(todo.id)} />
+                  )}
+                  {todo.text}
+                </div>
+                <span className="icons">
+                  <MdEdit
+                    onClick={() =>
+                      props.setEdit({ id: todo.id, value: todo.text })
+                    }
+                    className="edit"
+                  />
+                  <MdDeleteForever
+                    onClick={() => removeTodo(todo.id)}
+                    className="delete"
+                  />
+                </span>
+              </li>
+            );
+          }
+        })}
+        <hr size="30px" noshade></hr>
         <TodoItem
           todos={todos}
           starTodo={starTodo}
