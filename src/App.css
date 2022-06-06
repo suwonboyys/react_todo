@@ -92,6 +92,14 @@ body {
   cursor: pointer;
 }
 
+.unprimary {
+  display: none;
+}
+
+hr {
+  margin: 20px 0;
+}
+
 .complete {
   text-decoration: line-through;
   opacity: 0.4;
