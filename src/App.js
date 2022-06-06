@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import TodoInput from "./components/TodoInput";
 import TodoItem from "./components/TodoItem";
-import "./App.css";
 
 const App = () => {
   //todos = 할 일 목록, setTodos = 할 일 목록 조작 함수
