@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
-import { MdAddBox } from "react-icons/md";
+import React, { useState, useEffect, useRef } from 'react';
+import { MdAddBox } from 'react-icons/md';
 
 const TodoInput = (props) => {
-  const [input, setInput] = useState(props.edit ? props.edit.value : "");
+  const [input, setInput] = useState(props.edit ? props.edit.value : '');
 
   const inputRef = useRef(null);
 
@@ -23,7 +23,7 @@ const TodoInput = (props) => {
     });
 
     // Clear in the input area after submit
-    setInput("");
+    setInput('');
   };
 
   return (

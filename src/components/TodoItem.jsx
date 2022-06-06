@@ -23,44 +23,91 @@ const TodoItem = (props) => {
     return <TodoInput edit={edit} onSubmit={submitUpdate} />;
   }
 
-  return props.todos.map((todo, index) => {
-    if (!todo.isMarked) {
-      return (
-        <li
-          key={index}
-          className={`content ${
-            todo.isComplete ? 'itemRow complete' : 'itemRow'
-          }`}
-        >
-          <div key={todo.id} className="text">
-            {todo.isComplete ? (
-              <MdCheckBox onClick={() => props.completeTodo(todo.id)} />
-            ) : (
-              <MdCheckBoxOutlineBlank
-                onClick={() => props.completeTodo(todo.id)}
-              />
-            )}
-            {todo.isMarked ? (
-              <AiFillStar onClick={() => props.starTodo(todo.id)} />
-            ) : (
-              <AiOutlineStar onClick={() => props.starTodo(todo.id)} />
-            )}
-            {todo.text}
-          </div>
-          <span className="icons">
-            <MdEdit
-              onClick={() => setEdit({ id: todo.id, value: todo.text })}
-              className="edit"
-            />
-            <MdDeleteForever
-              onClick={() => props.removeTodo(todo.id)}
-              className="delete"
-            />
-          </span>
-        </li>
-      );
-    }
-  });
+  return (
+    <>
+      {props.todos.map((todo, index) => {
+        if (todo.isMarked) {
+          const storedItems = JSON.parse(localStorage.getItem('stars'));
+          return (
+            <li
+              key={index}
+              className={`content ${
+                storedItems.length === 0
+                  ? 'unprimary itemRow'
+                  : 'primary itemRow'
+              }`}
+            >
+              <div key={todo.id} className="text">
+                {todo.isComplete ? (
+                  <MdCheckBox onClick={() => props.completeTodo(todo.id)} />
+                ) : (
+                  <MdCheckBoxOutlineBlank
+                    onClick={() => props.completeTodo(todo.id)}
+                  />
+                )}
+                {todo.isMarked ? (
+                  <AiFillStar onClick={() => props.starTodo(todo.id)} />
+                ) : (
+                  <AiOutlineStar onClick={() => props.starTodo(todo.id)} />
+                )}
+                {todo.text}
+              </div>
+              <span className="icons">
+                <MdEdit
+                  onClick={() => setEdit({ id: todo.id, value: todo.text })}
+                  className="edit"
+                />
+                <MdDeleteForever
+                  onClick={() => props.removeTodo(todo.id)}
+                  className="delete"
+                />
+              </span>
+            </li>
+          );
+        }
+      })}
+      <hr size="10px" noshade="true"></hr>
+      {props.todos.map((todo, index) => {
+        if (!todo.isMarked) {
+          return (
+            <li
+              key={index}
+              className={`content ${
+                todo.isComplete ? 'nostar itemRow complete' : 'nostar itemRow'
+              }`}
+            >
+              <div key={todo.id} className="text">
+                {todo.isComplete ? (
+                  <MdCheckBox onClick={() => props.completeTodo(todo.id)} />
+                ) : (
+                  <MdCheckBoxOutlineBlank
+                    onClick={() => props.completeTodo(todo.id)}
+                  />
+                )}
+                {todo.isMarked ? (
+                  <AiFillStar onClick={() => props.starTodo(todo.id)} />
+                ) : (
+                  <AiOutlineStar onClick={() => props.starTodo(todo.id)} />
+                )}
+                {todo.text}
+              </div>
+              <span className="icons">
+                <MdEdit
+                  onClick={() => setEdit({ id: todo.id, value: todo.text })}
+                  className="edit"
+                />
+                <MdDeleteForever
+                  onClick={() => props.removeTodo(todo.id)}
+                  className="delete"
+                />
+              </span>
+            </li>
+          );
+        }
+      })}
+      ;
+    </>
+  );
 };
 
 export default TodoItem;

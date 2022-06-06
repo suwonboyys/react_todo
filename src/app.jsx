@@ -2,13 +2,9 @@ import React, { startTransition, useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import TodoItem from './components/TodoItem';
 import TodoInput from './components/TodoInput';
-import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
-import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md';
-import { MdEdit } from 'react-icons/md';
-import { MdDeleteForever } from 'react-icons/md';
 import './app.css';
 
-const App = (props) => {
+const App = () => {
   const [todos, setTodos] = useState([]);
   const [topTodos, setTopTodos] = useState([]);
 
@@ -50,7 +46,6 @@ const App = (props) => {
     );
 
     setTopTodos(removedTopList);
-
     localStorage.setItem('stars', JSON.stringify(removedTopList));
   };
 
@@ -61,6 +56,7 @@ const App = (props) => {
       }
       return todo;
     });
+
     setTodos(updatedTodos);
     localStorage.setItem('todos', JSON.stringify(updatedTodos));
   };
@@ -87,6 +83,7 @@ const App = (props) => {
       localStorage.setItem('todos', JSON.stringify(todos));
 
     const todoList = JSON.parse(localStorage.getItem('todos'));
+
     setTodos(todoList);
   }, []);
 
@@ -95,66 +92,27 @@ const App = (props) => {
       localStorage.setItem('stars', JSON.stringify(topTodos));
 
     const topList = JSON.parse(localStorage.getItem('stars'));
+
     setTopTodos(topList);
   }, []);
 
   return (
     <>
-      <Navbar totalCount={totalCount} starCount={starCount} />
-      <TodoInput onSubmit={addTodo} />
-      <ul className="items">
-        {todos.map((todo, index) => {
-          if (todo.isMarked) {
-            const storedItems = JSON.parse(localStorage.getItem('stars'));
-            return (
-              <li
-                key={index}
-                className={`content ${
-                  storedItems.length === 0
-                    ? 'unprimary itemRow'
-                    : 'primary itemRow'
-                }`}
-              >
-                <div key={todo.id} className="text">
-                  {todo.isComplete ? (
-                    <MdCheckBox onClick={() => completeTodo(todo.id)} />
-                  ) : (
-                    <MdCheckBoxOutlineBlank
-                      onClick={() => completeTodo(todo.id)}
-                    />
-                  )}
-                  {todo.isMarked ? (
-                    <AiFillStar onClick={() => starTodo(todo.id)} />
-                  ) : (
-                    <AiOutlineStar onClick={() => starTodo(todo.id)} />
-                  )}
-                  {todo.text}
-                </div>
-                <span className="icons">
-                  <MdEdit
-                    onClick={() =>
-                      props.setEdit({ id: todo.id, value: todo.text })
-                    }
-                    className="edit"
-                  />
-                  <MdDeleteForever
-                    onClick={() => removeTodo(todo.id)}
-                    className="delete"
-                  />
-                </span>
-              </li>
-            );
-          }
-        })}
-        <hr size="10px" noshade></hr>
-        <TodoItem
-          todos={todos}
-          starTodo={starTodo}
-          completeTodo={completeTodo}
-          removeTodo={removeTodo}
-          updateTodo={updateTodo}
-        />
-      </ul>
+      <header>
+        <Navbar totalCount={totalCount} starCount={starCount} />
+        <TodoInput onSubmit={addTodo} />
+      </header>
+      <section>
+        <ul className="items">
+          <TodoItem
+            todos={todos}
+            starTodo={starTodo}
+            completeTodo={completeTodo}
+            removeTodo={removeTodo}
+            updateTodo={updateTodo}
+          />
+        </ul>
+      </section>
     </>
   );
 };
