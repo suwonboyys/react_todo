@@ -146,7 +146,7 @@ const App = (props) => {
             );
           }
         })}
-        <hr size="30px" noshade></hr>
+        <hr size="10px" noshade></hr>
         <TodoItem
           todos={todos}
           starTodo={starTodo}
