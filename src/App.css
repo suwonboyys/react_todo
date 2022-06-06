@@ -12,10 +12,18 @@ body {
   background-color: rgb(255, 194, 81);
 }
 
-.Template {
-  padding-top: 20px;
-  max-height: 100vh;
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: rgb(255, 194, 81);
   text-align: center;
+  padding-top: 20px;
+  padding-bottom: 50px;
+}
+
+section {
+  margin-top: 250px;
 }
 
 .title {
