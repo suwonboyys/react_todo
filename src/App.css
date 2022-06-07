@@ -19,7 +19,7 @@ header {
   background-color: rgb(255, 194, 81);
   text-align: center;
   padding-top: 20px;
-  padding-bottom: 50px;
+  margin-bottom: 50px;
 }
 
 section {
@@ -27,11 +27,16 @@ section {
 }
 
 .title {
-  margin: 30px auto;
-  padding-bottom: 20px;
+  margin: auto;
   font-size: var(--super-size);
   font-weight: bold;
   color: var(--color-darkgray);
+}
+
+.time {
+  font-weight: bold;
+  color: var(--color-darkgray);
+  white-space: pre-line;
 }
 
 .TodoInput {
@@ -69,6 +74,7 @@ section {
 
 .items {
   padding: 0.4rem;
+  margin-top: 1rem;
 }
 
 .TodoItem {

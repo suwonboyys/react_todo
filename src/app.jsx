@@ -1,8 +1,9 @@
-import React, { startTransition, useEffect, useState } from 'react';
-import Navbar from './components/Navbar';
-import TodoItem from './components/TodoItem';
-import TodoInput from './components/TodoInput';
-import './app.css';
+import React, { startTransition, useEffect, useState } from "react";
+import Navbar from "./components/Navbar";
+import Clock from "./components/Clock";
+import TodoItem from "./components/TodoItem";
+import TodoInput from "./components/TodoInput";
+import "./app.css";
 
 const App = () => {
   const [todos, setTodos] = useState([]);
@@ -17,8 +18,8 @@ const App = () => {
       return;
     }
 
-    localStorage.setItem('todos', JSON.stringify([...todos, todo]));
-    setTodos(JSON.parse(localStorage.getItem('todos')));
+    localStorage.setItem("todos", JSON.stringify([...todos, todo]));
+    setTodos(JSON.parse(localStorage.getItem("todos")));
   };
 
   const updateTodo = (todoId, newValue) => {
@@ -31,7 +32,7 @@ const App = () => {
     );
 
     setTodos(updatedArr);
-    localStorage.setItem('todos', JSON.stringify(updatedArr));
+    localStorage.setItem("todos", JSON.stringify(updatedArr));
   };
 
   const removeTodo = (id) => {
@@ -39,14 +40,14 @@ const App = () => {
 
     setTodos(removedArr);
 
-    localStorage.setItem('todos', JSON.stringify(removedArr));
+    localStorage.setItem("todos", JSON.stringify(removedArr));
 
     const removedTopList = [...todos].filter(
       (todo) => todo.id !== id && todo.isMarked === true
     );
 
     setTopTodos(removedTopList);
-    localStorage.setItem('stars', JSON.stringify(removedTopList));
+    localStorage.setItem("stars", JSON.stringify(removedTopList));
   };
 
   const completeTodo = (id) => {
@@ -58,7 +59,7 @@ const App = () => {
     });
 
     setTodos(updatedTodos);
-    localStorage.setItem('todos', JSON.stringify(updatedTodos));
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   };
 
   const starTodo = (id) => {
@@ -70,28 +71,28 @@ const App = () => {
     });
 
     setTodos(markedTodos);
-    localStorage.setItem('todos', JSON.stringify(markedTodos));
+    localStorage.setItem("todos", JSON.stringify(markedTodos));
 
     const topTodos = [...todos].filter((todo) => todo.isMarked === true);
 
     setTopTodos(topTodos);
-    localStorage.setItem('stars', JSON.stringify(topTodos));
+    localStorage.setItem("stars", JSON.stringify(topTodos));
   };
 
   useEffect(() => {
-    if (localStorage.getItem('todos') === null)
-      localStorage.setItem('todos', JSON.stringify(todos));
+    if (localStorage.getItem("todos") === null)
+      localStorage.setItem("todos", JSON.stringify(todos));
 
-    const todoList = JSON.parse(localStorage.getItem('todos'));
+    const todoList = JSON.parse(localStorage.getItem("todos"));
 
     setTodos(todoList);
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem('stars') === null)
-      localStorage.setItem('stars', JSON.stringify(topTodos));
+    if (localStorage.getItem("stars") === null)
+      localStorage.setItem("stars", JSON.stringify(topTodos));
 
-    const topList = JSON.parse(localStorage.getItem('stars'));
+    const topList = JSON.parse(localStorage.getItem("stars"));
 
     setTopTodos(topList);
   }, []);
@@ -100,6 +101,7 @@ const App = () => {
     <>
       <header>
         <Navbar totalCount={totalCount} starCount={starCount} />
+        <Clock />
         <TodoInput onSubmit={addTodo} />
       </header>
       <section>

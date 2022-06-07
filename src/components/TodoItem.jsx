@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import TodoInput from './TodoInput';
-import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
-import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md';
-import { MdEdit } from 'react-icons/md';
-import { MdDeleteForever } from 'react-icons/md';
+import React, { useState } from "react";
+import TodoInput from "./TodoInput";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { MdCheckBox, MdCheckBoxOutlineBlank } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
 
 const TodoItem = (props) => {
   const [edit, setEdit] = useState({
     id: null,
-    value: '',
+    value: "",
   });
 
   const submitUpdate = (value) => {
     props.updateTodo(edit.id, value);
     setEdit({
       id: null,
-      value: '',
+      value: "",
     });
   };
 
@@ -27,14 +27,14 @@ const TodoItem = (props) => {
     <>
       {props.todos.map((todo, index) => {
         if (todo.isMarked) {
-          const storedItems = JSON.parse(localStorage.getItem('stars'));
+          const storedItems = JSON.parse(localStorage.getItem("stars"));
           return (
             <li
               key={index}
               className={`content ${
                 storedItems.length === 0
-                  ? 'unprimary itemRow'
-                  : 'primary itemRow'
+                  ? "unprimary itemRow"
+                  : "primary itemRow"
               }`}
             >
               <div key={todo.id} className="text">
@@ -73,7 +73,7 @@ const TodoItem = (props) => {
             <li
               key={index}
               className={`content ${
-                todo.isComplete ? 'nostar itemRow complete' : 'nostar itemRow'
+                todo.isComplete ? "nostar itemRow complete" : "nostar itemRow"
               }`}
             >
               <div key={todo.id} className="text">
