@@ -1,12 +1,14 @@
-import React, { startTransition, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Navbar from './components/Navbar';
 import TodoItem from './components/TodoItem';
 import TodoInput from './components/TodoInput';
-import './app.css';
+import './App.css';
 
 const App = () => {
   const [todos, setTodos] = useState([]);
   const [topTodos, setTopTodos] = useState([]);
+
+  const scrollRef = useRef();
 
   // display the amount of current todos and stared todos on header
   const totalCount = todos.length;
@@ -59,6 +61,9 @@ const App = () => {
 
     setTodos(updatedTodos);
     localStorage.setItem('todos', JSON.stringify(updatedTodos));
+
+    setTopTodos(updatedTodos);
+    localStorage.setItem('stars', JSON.stringify(updatedTodos));
   };
 
   const starTodo = (id) => {
@@ -100,16 +105,22 @@ const App = () => {
     <>
       <header>
         <Navbar totalCount={totalCount} starCount={starCount} />
-        <TodoInput onSubmit={addTodo} />
+        <TodoInput
+          onSubmit={addTodo}
+          onClick={() => {
+            scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+          }}
+        />
       </header>
       <section>
-        <ul className="items">
+        <ul className="itemRows">
           <TodoItem
             todos={todos}
             starTodo={starTodo}
             completeTodo={completeTodo}
             removeTodo={removeTodo}
             updateTodo={updateTodo}
+            ref={scrollRef}
           />
         </ul>
       </section>
