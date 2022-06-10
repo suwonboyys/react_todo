@@ -35,18 +35,25 @@ const TodoItem = (props) => {
                 storedItems.length === 0
                   ? 'unprimary itemRow'
                   : 'primary itemRow'
-              }`}
+              } ${todo.isComplete ? 'complete' : ''}`}
             >
               <div key={todo.id} className="text">
                 {todo.isComplete ? (
-                  <MdCheckBox onClick={() => props.completeTodo(todo.id)} />
+                  <MdCheckBox
+                    className="checkBox"
+                    onClick={() => props.completeTodo(todo.id)}
+                  />
                 ) : (
                   <MdCheckBoxOutlineBlank
+                    className="uncheckBox"
                     onClick={() => props.completeTodo(todo.id)}
                   />
                 )}
                 {todo.isMarked ? (
-                  <AiFillStar onClick={() => props.starTodo(todo.id)} />
+                  <AiFillStar
+                    className="star"
+                    onClick={() => props.starTodo(todo.id)}
+                  />
                 ) : (
                   <AiOutlineStar onClick={() => props.starTodo(todo.id)} />
                 )}
