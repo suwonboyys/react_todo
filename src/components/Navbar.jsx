@@ -1,9 +1,9 @@
 import React from 'react';
 
-const NavBar = (props) => (
+const NavBar = ({ onTotalCount, onStarCount }) => (
   <nav>
     <h1 className="title">
-      Todo List({props.totalCount}) - # Primary : {props.starCount}
+      Todo List({onTotalCount}) - # Primary : {onStarCount}
     </h1>
   </nav>
 );

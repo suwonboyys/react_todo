@@ -1,72 +1,65 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
-import TodoItem from './components/TodoItem';
+import TodoUnmarkedItem from './components/TodoUnmarkedItem';
+import TodoMarkedItem from './components/TodoMarkedItem';
 import TodoInput from './components/TodoInput';
 import './App.css';
 
 const App = () => {
   const [todos, setTodos] = useState([]);
-  const [topTodos, setTopTodos] = useState([]);
-
-  const scrollRef = useRef();
+  const [stars, setStars] = useState([]);
 
   // display the amount of current todos and stared todos on header
   const totalCount = todos.length;
-  const starCount = topTodos.length;
+  const starCount = stars.length;
 
-  const addTodo = (todo) => {
-    if (!todo.text || /^\s*$/.test(todo.text)) {
-      return;
-    }
-
+  // create a new todo list
+  const handleAddTodo = (todo) => {
+    checkNullTodo(todo);
     localStorage.setItem('todos', JSON.stringify([...todos, todo]));
     setTodos(JSON.parse(localStorage.getItem('todos')));
   };
 
-  const updateTodo = (todoId, newValue) => {
-    if (!newValue.text || /^\s*$/.test(newValue.text)) {
-      return;
-    }
-
-    const updatedArr = [...todos].map((item) =>
-      item.id === todoId ? newValue : item
+  // edit (or modified) the todo list
+  const handleEditTodo = (todo, newValue) => {
+    const modifiedTodos = [...todos].map((item) =>
+      item.id === todo.id ? newValue : item
     );
-
-    setTodos(updatedArr);
-    localStorage.setItem('todos', JSON.stringify(updatedArr));
+    setTodos(modifiedTodos);
+    localStorage.setItem('todos', JSON.stringify(modifiedTodos));
   };
 
-  const removeTodo = (id) => {
-    const removedArr = [...todos].filter((todo) => todo.id !== id);
+  // remove selected todo list
+  const handleRemoveTodo = (id) => {
+    const removedTodos = [...todos].filter((todo) => todo.id !== id);
+    setTodos(removedTodos);
+    localStorage.setItem('todos', JSON.stringify(removedTodos));
 
-    setTodos(removedArr);
-
-    localStorage.setItem('todos', JSON.stringify(removedArr));
-
-    const removedTopList = [...todos].filter(
+    const removedStars = [...todos].filter(
       (todo) => todo.id !== id && todo.isMarked === true
     );
-
-    setTopTodos(removedTopList);
-    localStorage.setItem('stars', JSON.stringify(removedTopList));
+    setStars(removedStars);
+    localStorage.setItem('stars', JSON.stringify(removedStars));
   };
 
-  const completeTodo = (id) => {
-    let updatedTodos = todos.map((todo) => {
+  // completed todo list has a line on text
+  const handleCompleteTodo = (id) => {
+    let finishedTodos = todos.map((todo) => {
       if (todo.id === id) {
         todo.isComplete = !todo.isComplete;
       }
       return todo;
     });
-
-    setTodos(updatedTodos);
-    localStorage.setItem('todos', JSON.stringify(updatedTodos));
-
-    setTopTodos(updatedTodos);
-    localStorage.setItem('stars', JSON.stringify(updatedTodos));
+    // for the localStorage, is named todos
+    setTodos(finishedTodos);
+    localStorage.setItem('todos', JSON.stringify(finishedTodos));
+    // for the localStorage, is named stars
+    setStars(finishedTodos);
+    localStorage.setItem('stars', JSON.stringify(finishedTodos));
   };
 
-  const starTodo = (id) => {
+  //
+  const handleMarkTodo = (id) => {
     let markedTodos = todos.map((todo) => {
       if (todo.id === id) {
         todo.isMarked = !todo.isMarked;
@@ -77,50 +70,51 @@ const App = () => {
     setTodos(markedTodos);
     localStorage.setItem('todos', JSON.stringify(markedTodos));
 
-    const topTodos = [...todos].filter((todo) => todo.isMarked === true);
-
-    setTopTodos(topTodos);
-    localStorage.setItem('stars', JSON.stringify(topTodos));
+    let stars = [...todos].filter((todo) => todo.isMarked === true);
+    setStars(stars);
+    localStorage.setItem('stars', JSON.stringify(stars));
   };
 
   useEffect(() => {
     if (localStorage.getItem('todos') === null)
       localStorage.setItem('todos', JSON.stringify(todos));
-
-    const todoList = JSON.parse(localStorage.getItem('todos'));
-
-    setTodos(todoList);
+    const loadTodos = JSON.parse(localStorage.getItem('todos'));
+    setTodos(loadTodos);
   }, []);
 
   useEffect(() => {
     if (localStorage.getItem('stars') === null)
-      localStorage.setItem('stars', JSON.stringify(topTodos));
-
-    const topList = JSON.parse(localStorage.getItem('stars'));
-
-    setTopTodos(topList);
+      localStorage.setItem('stars', JSON.stringify(stars));
+    const loadStars = JSON.parse(localStorage.getItem('stars'));
+    setStars(loadStars);
   }, []);
+
+  // check the input todo.text has some value, or not
+  const checkNullTodo = (todo) => {
+    if (!todo.text || /^\s*$/.test(todo.text)) return;
+  };
 
   return (
     <>
       <header>
-        <Navbar totalCount={totalCount} starCount={starCount} />
-        <TodoInput
-          onSubmit={addTodo}
-          onClick={() => {
-            scrollRef.current.scrollIntoView({ behavior: 'smooth' });
-          }}
-        />
+        <Navbar onTotalCount={totalCount} onStarCount={starCount} />
+        <TodoInput onSubmit={handleAddTodo} />
       </header>
       <section>
         <ul className="itemRows">
-          <TodoItem
+          <TodoMarkedItem
             todos={todos}
-            starTodo={starTodo}
-            completeTodo={completeTodo}
-            removeTodo={removeTodo}
-            updateTodo={updateTodo}
-            ref={scrollRef}
+            onMarkTodo={handleMarkTodo}
+            onCompleteTodo={handleCompleteTodo}
+            onRemoveTodo={handleRemoveTodo}
+            onEditTodo={handleEditTodo}
+          />
+          <TodoUnmarkedItem
+            todos={todos}
+            onMarkTodo={handleMarkTodo}
+            onCompleteTodo={handleCompleteTodo}
+            onRemoveTodo={handleRemoveTodo}
+            onEditTodo={handleEditTodo}
           />
         </ul>
       </section>

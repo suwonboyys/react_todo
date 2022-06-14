@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MdAddBox } from 'react-icons/md';
 
-const TodoInput = (props) => {
-  const [input, setInput] = useState(props.edit ? props.edit.value : '');
+const TodoInput = ({ edit, onSubmit }) => {
+  const [input, setInput] = useState(edit ? edit.value : '');
 
   const inputRef = useRef(null);
 
@@ -17,7 +17,7 @@ const TodoInput = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    props.onSubmit({
+    onSubmit({
       id: Math.floor(Math.random() * 10000),
       text: input,
     });
@@ -28,7 +28,7 @@ const TodoInput = (props) => {
 
   return (
     <form className="TodoInput" onSubmit={handleSubmit}>
-      {props.edit ? (
+      {edit ? (
         <>
           <input
             placeholder=""
