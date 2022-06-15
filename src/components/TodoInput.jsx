@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MdAddBox } from 'react-icons/md';
 
-const TodoInput = ({ edit, onSubmit }) => {
+const TodoInput = ({ todos, edit, onSubmit, onScroll }) => {
   const [input, setInput] = useState(edit ? edit.value : '');
 
   const inputRef = useRef(null);
@@ -20,14 +20,20 @@ const TodoInput = ({ edit, onSubmit }) => {
     onSubmit({
       id: Math.floor(Math.random() * 10000),
       text: input,
+      isComplete: false,
+      isMarked: false,
     });
 
     // Clear in the input area after submit
     setInput('');
   };
 
+  const handelScroll = () => {
+    onScroll([...todos]);
+  };
+
   return (
-    <form className="TodoInput" onSubmit={handleSubmit}>
+    <form className="TodoInput" onSubmit={handleSubmit} onScroll={handelScroll}>
       {edit ? (
         <>
           <input
@@ -38,7 +44,11 @@ const TodoInput = ({ edit, onSubmit }) => {
             className="TodoInput edit"
             ref={inputRef}
           />
-          <MdAddBox className="TodoAddButton edit" onClick={handleSubmit} />
+          <MdAddBox
+            className="TodoAddButton edit"
+            onClick={handleSubmit}
+            // onScroll={handleScroll}
+          />
         </>
       ) : (
         <>
@@ -50,7 +60,11 @@ const TodoInput = ({ edit, onSubmit }) => {
             className="TodoInput"
             ref={inputRef}
           />
-          <MdAddBox className="TodoAddButton edit" onClick={handleSubmit} />
+          <MdAddBox
+            className="TodoAddButton edit"
+            onClick={handleSubmit}
+            // onScroll={handleScroll}
+          />
         </>
       )}
     </form>

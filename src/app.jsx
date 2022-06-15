@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Navbar from './components/Navbar';
+import Clock from './components/Clock';
 import TodoUnmarkedItem from './components/TodoUnmarkedItem';
 import TodoMarkedItem from './components/TodoMarkedItem';
 import TodoInput from './components/TodoInput';
@@ -8,6 +9,26 @@ import './App.css';
 const App = () => {
   const [todos, setTodos] = useState([]);
   const [stars, setStars] = useState([]);
+
+  const todoRef = useRef([]);
+
+  const handleScrollTodo = () => {
+    todoRef.current.scrollIntoView({
+      block: 'end',
+      behavior: 'smooth',
+      inline: 'start',
+    });
+  };
+
+  useEffect(() => {
+    if (todos.length > 0) {
+      if (todos.length === todoRef.current.length) {
+        handleScrollTodo();
+      }
+    }
+  }, [todoRef]);
+
+  //console.log(todoRef);
 
   // display the amount of current todos and stared todos on header
   const totalCount = todos.length;
@@ -18,15 +39,17 @@ const App = () => {
     checkNullTodo(todo);
     localStorage.setItem('todos', JSON.stringify([...todos, todo]));
     setTodos(JSON.parse(localStorage.getItem('todos')));
+    handleScrollTodo();
   };
 
   // edit (or modified) the todo list
-  const handleEditTodo = (todo, newValue) => {
+  const handleEditTodo = (todoId, newValue) => {
     const modifiedTodos = [...todos].map((item) =>
-      item.id === todo.id ? newValue : item
+      item.id === todoId ? newValue : item
     );
     setTodos(modifiedTodos);
     localStorage.setItem('todos', JSON.stringify(modifiedTodos));
+    //handleScrollTodo();
   };
 
   // remove selected todo list
@@ -98,23 +121,28 @@ const App = () => {
     <>
       <header>
         <Navbar onTotalCount={totalCount} onStarCount={starCount} />
-        <TodoInput onSubmit={handleAddTodo} />
+        <Clock />
+        <TodoInput onSubmit={handleAddTodo} /* onScroll={handleScrollTodo} */ />
       </header>
       <section>
         <ul className="itemRows">
           <TodoMarkedItem
             todos={todos}
+            ref={todoRef}
             onMarkTodo={handleMarkTodo}
             onCompleteTodo={handleCompleteTodo}
             onRemoveTodo={handleRemoveTodo}
             onEditTodo={handleEditTodo}
+            onScrollTodo={handleScrollTodo}
           />
           <TodoUnmarkedItem
             todos={todos}
+            ref={todoRef}
             onMarkTodo={handleMarkTodo}
             onCompleteTodo={handleCompleteTodo}
             onRemoveTodo={handleRemoveTodo}
             onEditTodo={handleEditTodo}
+            onScrollTodo={handleScrollTodo}
           />
         </ul>
       </section>

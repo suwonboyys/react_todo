@@ -1,17 +1,20 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import TodoInput from './TodoInput';
 import { AiFillStar, AiOutlineStar } from 'react-icons/ai';
 import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md';
 import { MdEdit } from 'react-icons/md';
 import { MdDeleteForever } from 'react-icons/md';
 
-const TodoMarkedItem = ({
-  todos,
-  onMarkTodo,
-  onCompleteTodo,
-  onRemoveTodo,
-  onEditTodo,
-}) => {
+const TodoMarkedItem = forwardRef((props, ref) => {
+  const {
+    todos,
+    onMarkTodo,
+    onCompleteTodo,
+    onRemoveTodo,
+    onEditTodo,
+    onScrollTodo,
+  } = props;
+
   /* const todoRef = useRef([]); */
 
   const [edit, setEdit] = useState({
@@ -21,10 +24,12 @@ const TodoMarkedItem = ({
 
   const submitUpdate = (value) => {
     onEditTodo(edit.id, value);
+
     setEdit({
       id: null,
       value: '',
     });
+    onScrollTodo();
   };
 
   /*   useEffect(() => {
@@ -48,7 +53,7 @@ const TodoMarkedItem = ({
       return (
         <li
           key={todo.id}
-          /* ref={(el) => (todoRef.current[index] = el)} */
+          ref={ref}
           className={`content ${
             storedItems.length === 0 ? 'unprimary itemRow' : 'primary itemRow'
           } ${todo.isComplete ? 'complete' : ''}`}
@@ -89,6 +94,6 @@ const TodoMarkedItem = ({
       );
     }
   });
-};
+});
 
 export default TodoMarkedItem;
