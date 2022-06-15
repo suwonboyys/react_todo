@@ -34,20 +34,30 @@ header {
   background-color: var(--clr-black);
   text-align: center;
   padding-top: 20px;
-  padding-bottom: 50px;
+  padding-bottom: 20px;
 }
 
 .title {
-  margin: 30px auto;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: 30px;
   padding-bottom: 20px;
   font-size: var(--extra-large-size);
   font-weight: bold;
   color: var(--clr-white);
 }
 
+.time {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--clr-white);
+}
+
 section {
   margin-top: 250px;
-  height: 650px;
+  max-height: 70vh;
   overflow-y: scroll;
 }
 
